@@ -1,8 +1,8 @@
 {
     "name": "sort-lines-by-selection",
-    "displayName": "SortLinesBySelection",
+    "displayName": "Sort Lines by Selection",
     "description": "Sort lines based on the text selected in each line",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "publisher": "earshinov",
     "repository": "https://github.com/earshinov/vscode-sort-lines-by-selection",
     "license": "MIT",
