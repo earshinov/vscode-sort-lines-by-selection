@@ -3,7 +3,7 @@
     "displayName": "Sort Lines by Selection",
     "description": "Sort lines based on the text selected in each line",
     "icon": "doc/logo.png",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "publisher": "earshinov",
     "repository": "https://github.com/earshinov/vscode-sort-lines-by-selection",
     "license": "MIT",
