@@ -13,7 +13,13 @@ function compileMorph(this: void, morph: string): IMorph | null {
   }
 }
 
-export function run(this: void, editor: vscode.TextEditor, edit: vscode.TextEditorEdit, morph: IMorph, naturalSort: boolean) {
+export function run(
+  this: void,
+  editor: vscode.TextEditor,
+  edit: vscode.TextEditorEdit,
+  morph: IMorph,
+  naturalSort: boolean,
+) {
   const selections = unique(
     sort(editor.selections.map((selection) => getSelectionData(editor.document, selection, morph, naturalSort))),
   );
@@ -56,13 +62,11 @@ function prepareNaturalSort(s: string): Chunk[] {
   let i = 0;
   const ret: Chunk[] = [];
   while ((m = RE_NUMBER.exec(s))) {
-    if (i < m.index)
-      ret.push(s.substring(i, m.index));
+    if (i < m.index) ret.push(s.substring(i, m.index));
     ret.push(parseFloat(m[0]));
     i = m.index + m[0].length;
   }
-  if (i < s.length)
-    ret.push(s.substring(i));
+  if (i < s.length) ret.push(s.substring(i));
   return ret;
 }
 
@@ -98,14 +102,11 @@ function sortTexts(this: void, selections: ISelectionData[]) {
 function compare(this: void, a: Chunk[], b: Chunk[]) {
   for (let i = 0; i < a.length && i < b.length; ++i) {
     // If different types, consider numbers less than character strings
-    if (typeof a[i] !== typeof b[i])
-      return typeof a[i] == "number" ? -1 : 1;
+    if (typeof a[i] !== typeof b[i]) return typeof a[i] == 'number' ? -1 : 1;
 
     // Same-type comparison
-    if (a[i] < b[i])
-      return -1;
-    if (a[i] > b[i])
-      return 1;
+    if (a[i] < b[i]) return -1;
+    if (a[i] > b[i]) return 1;
   }
 
   // If one array is a prefix of another, the longer array is greater.

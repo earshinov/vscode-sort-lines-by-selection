@@ -17,7 +17,7 @@
         "onCommand:sort-lines-by-selection.sortLinesBySelection",
         "onCommand:sort-lines-by-selection.sortLinesBySelectionNatural"
     ],
-    "main": "./out/extension",
+    "main": "./out/extension.js",
     "contributes": {
         "commands": [
             {

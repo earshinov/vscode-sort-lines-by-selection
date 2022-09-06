@@ -10,11 +10,16 @@ export function activate(this: void, context: vscode.ExtensionContext) {
         return run(editor, edit, getMorph(morph, case_sensitive), natural_sort);
       });
     }),
-    vscode.commands.registerTextEditorCommand('sort-lines-by-selection.sortLinesBySelectionNatural', (editor, edit, args) => {
-      trapExceptions(() => vscode.commands.executeCommand('sort-lines-by-selection.sortLinesBySelection', {
-        natural_sort: true,
-      }));
-    }),
+    vscode.commands.registerTextEditorCommand(
+      'sort-lines-by-selection.sortLinesBySelectionNatural',
+      (editor, edit, args) => {
+        trapExceptions(() =>
+          vscode.commands.executeCommand('sort-lines-by-selection.sortLinesBySelection', {
+            natural_sort: true,
+          }),
+        );
+      },
+    ),
   );
 }
 

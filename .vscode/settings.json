@@ -1,9 +1,29 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-    "files.exclude": {
-        "out": false // set this to true to hide the "out" folder with the compiled JS files
-    },
-    "search.exclude": {
-        "out": true // set this to false to include "out" folder in search results
-    }
+  "editor.formatOnSave": true,
+  "editor.insertSpaces": true,
+  "editor.rulers": [
+    120
+  ],
+  "editor.tabSize": 2,
+  "files.exclude": {
+    ".nyc_output/": true,
+    ".vscode-test/": true,
+    "*.vsix": true,
+    "coverage/": true,
+    "node_modules": true,
+    "out": true,
+    "yarn-error.log": true
+  },
+  "search.exclude": {
+    ".nyc_output/": true,
+    ".vscode-test/": true,
+    "*.vsix": true,
+    "coverage/": true,
+    "node_modules": true,
+    "out": true,
+    "yarn-error.log": true
+  },
+  // Turn off tsc task auto detection since we have the necessary tasks as npm scripts
+  "typescript.tsc.autoDetect": "off"
 }

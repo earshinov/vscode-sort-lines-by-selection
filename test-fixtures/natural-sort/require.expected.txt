@@ -1,0 +1,11 @@
+var fs = require("fs");
+
+var browserSync = [require("browser-sync");]
+var browserify = [require("browserify");]
+var gulp = [require("gulp");]
+var gutil = [require("gulp-util");]
+var watch = [require("gulp-watch");]
+var through2 = [require("through2");]
+var tsify = [require("tsify");]
+var source = [require("vinyl-source-stream");]
+var watchify = [require("watchify");]

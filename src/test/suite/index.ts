@@ -1,7 +1,6 @@
 import * as path from 'path';
 import * as glob from 'glob';
 
-import * as vscode from 'vscode';
 import * as Mocha from 'mocha';
 
 function runTests(): Promise<void> {
