@@ -1,2 +1,7 @@
-out
-node_modules
+/.nyc_output/
+/.vscode-test/
+/*.vsix
+/coverage/
+/node_modules/
+/out/
+/yarn-error.log
