@@ -16,7 +16,7 @@ async function main() {
     await runTests({
       extensionDevelopmentPath,
       extensionTestsPath,
-      launchArgs: ['--disable-extensions', path.resolve('test-fixtures')],
+      launchArgs: ['--disable-extensions', path.resolve('test-fixtures')]
     });
   } catch (err) {
     console.error('Failed to run tests');

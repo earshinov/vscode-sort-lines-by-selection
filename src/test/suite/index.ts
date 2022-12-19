@@ -7,7 +7,7 @@ function runTests(): Promise<void> {
   // Create the mocha test
   const mocha = new Mocha({
     ui: 'tdd',
-    color: true,
+    color: true
     //timeout: 30000,  // default: 2000 (ms)
   });
 
@@ -50,6 +50,7 @@ function runTests(): Promise<void> {
  * - https://gitlab.com/gitlab-org/gitlab-vscode-extension/-/issues/224
  */
 async function withCoverage(f: () => Thenable<void>): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const NYC = require('nyc');
   const nyc = new NYC({
     cwd: path.resolve(__dirname, '../../../'),
@@ -59,7 +60,7 @@ async function withCoverage(f: () => Thenable<void>): Promise<void> {
     instrument: true,
     hookRequire: true,
     hookRunInContext: true,
-    hookRunInThisContext: true,
+    hookRunInThisContext: true
   });
 
   console.log('nyc: Preparing for test run');
@@ -79,6 +80,6 @@ async function withCoverage(f: () => Thenable<void>): Promise<void> {
   }
 }
 
-export function run() {
+export function run(): Promise<void> {
   return withCoverage(runTests);
 }

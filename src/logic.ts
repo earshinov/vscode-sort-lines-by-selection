@@ -7,6 +7,7 @@ export function getMorph(this: void, morph: string | null, caseSensitive: boolea
 
 function compileMorph(this: void, morph: string): IMorph | null {
   try {
+    // eslint-disable-next-line no-eval
     return eval('s => ' + morph);
   } catch (e) {
     return null;
@@ -18,10 +19,10 @@ export function run(
   editor: vscode.TextEditor,
   edit: vscode.TextEditorEdit,
   morph: IMorph,
-  naturalSort: boolean,
-) {
+  naturalSort: boolean
+): void {
   const selections = unique(
-    sort(editor.selections.map((selection) => getSelectionData(editor.document, selection, morph, naturalSort))),
+    sort(editor.selections.map((selection) => getSelectionData(editor.document, selection, morph, naturalSort)))
   );
   const texts = sortTexts(selections);
   for (let i = selections.length - 1; i >= 0; --i) edit.replace(selections[i].line, texts[i]);
@@ -32,16 +33,16 @@ function getSelectionData(
   document: vscode.TextDocument,
   selection: vscode.Selection,
   morph: IMorph,
-  naturalSort: boolean,
+  naturalSort: boolean
 ): ISelectionData {
   const line = lineFromSelection(document, selection);
   const comparisonText = morph(document.getText(selection));
   const comparison = naturalSort ? prepareNaturalSort(comparisonText) : [comparisonText];
   return {
-    selection: selection,
+    selection,
     comparison,
-    line: line,
-    lineText: document.getText(line),
+    line,
+    lineText: document.getText(line)
   };
 }
 
@@ -73,7 +74,7 @@ function prepareNaturalSort(s: string): Chunk[] {
 function sort(this: void, selections: ISelectionData[]) {
   return selections
     .slice() // clone
-    .sort(function (a, b) {
+    .sort((a, b) => {
       const aStart = a.line.start;
       const bStart = b.line.start;
       return aStart.compareTo(bStart);
@@ -113,9 +114,7 @@ function compare(this: void, a: Chunk[], b: Chunk[]) {
   return a.length - b.length;
 }
 
-interface IMorph {
-  (s: string): string;
-}
+type IMorph = (s: string) => string;
 
 interface ISelectionData {
   selection: vscode.Selection;

@@ -4,13 +4,13 @@ import * as path from 'path';
 
 import * as vscode from 'vscode';
 
-export function createFileBasedTestSuite(suiteName: string, f: () => Thenable<void>) {
+export function createFileBasedTestSuite(suiteName: string, f: () => Thenable<void>): void {
   suite(suiteName, () => {
     createFileBasedTests(suiteName, f);
   });
 }
 
-export function createFileBasedTests(suiteName: string, f: () => Thenable<void>) {
+export function createFileBasedTests(suiteName: string, f: () => Thenable<void>): void {
   const workspacePath = vscode.workspace.workspaceFolders![0].uri.fsPath;
 
   for (const filename of fs.readdirSync(path.join(workspacePath, suiteName))) {
@@ -30,7 +30,7 @@ async function runFileBasedTest(
   suiteName: string,
   basename: string,
   extname: string,
-  f: () => Thenable<void>,
+  f: () => Thenable<void>
 ): Promise<void> {
   await vscode.commands.executeCommand('workbench.action.closeAllEditors');
 
@@ -59,6 +59,7 @@ const RE_BRACKETS = /\[.*?\]/g;
 /**
  * Select ranges designated with [...]
  */
+// eslint-disable-next-line @typescript-eslint/require-await
 async function selectDesignatedRanges(editor: vscode.TextEditor): Promise<void> {
   const doc = editor.document;
   let m: RegExpExecArray | null;
