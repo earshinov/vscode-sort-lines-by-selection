@@ -35,8 +35,8 @@
             "isBackground": true,
             "problemMatcher": "$tsc-watch",
             "group": {
-                "_id": "build",
-                "isDefault": false
+                "kind": "build",
+                "isDefault": true
             }
         }
     ]

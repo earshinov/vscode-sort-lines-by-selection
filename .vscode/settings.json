@@ -1,10 +1,9 @@
 // Place your settings in this file to overwrite default and user settings.
 {
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "editor.insertSpaces": true,
-  "editor.rulers": [
-    120
-  ],
+  "editor.rulers": [120],
   "editor.tabSize": 2,
   "files.exclude": {
     ".nyc_output/": true,
@@ -23,7 +22,5 @@
     "node_modules": true,
     "out": true,
     "yarn-error.log": true
-  },
-  // Turn off tsc task auto detection since we have the necessary tasks as npm scripts
-  "typescript.tsc.autoDetect": "off"
+  }
 }
