@@ -1,11 +1,11 @@
 import * as vscode from 'vscode';
 
-export function getMorph(this: void, morph: string | null, caseSensitive: boolean): IMorph {
+export function getMorph(morph: string | null, caseSensitive: boolean): IMorph {
   const morphFunction: IMorph = (morph && compileMorph(morph)) || ((s) => s);
   return caseSensitive ? morphFunction : (s) => morphFunction(s.toLowerCase());
 }
 
-function compileMorph(this: void, morph: string): IMorph | null {
+function compileMorph(morph: string): IMorph | null {
   try {
     // eslint-disable-next-line no-eval
     return eval('s => ' + morph);
@@ -14,43 +14,54 @@ function compileMorph(this: void, morph: string): IMorph | null {
   }
 }
 
-export function run(
-  this: void,
-  editor: vscode.TextEditor,
-  edit: vscode.TextEditorEdit,
-  morph: IMorph,
-  naturalSort: boolean
-): void {
-  const selections = unique(
-    sort(editor.selections.map((selection) => getSelectionData(editor.document, selection, morph, naturalSort)))
-  );
+export function run(editor: vscode.TextEditor, edit: vscode.TextEditorEdit, morph: IMorph, naturalSort: boolean): void {
+  let selections: ISelectionData[];
+  if (editor.selections.length === 1) {
+    // Sort whole lines when given a single selection (#1)
+    selections = [];
+    for (let i = editor.selection.start.line; i <= editor.selection.end.line; ++i)
+      selections.push(getLineData(editor.document, i, morph, naturalSort));
+    selections = sort(selections);
+  } else {
+    // Sort lines by selection
+    selections = unique(
+      sort(editor.selections.map((selection) => getSelectionData(editor.document, selection, morph, naturalSort)))
+    );
+  }
   const texts = sortTexts(selections);
   for (let i = selections.length - 1; i >= 0; --i) edit.replace(selections[i].line, texts[i]);
 }
 
 function getSelectionData(
-  this: void,
   document: vscode.TextDocument,
   selection: vscode.Selection,
   morph: IMorph,
   naturalSort: boolean
 ): ISelectionData {
-  const line = lineFromSelection(document, selection);
+  const line = document.lineAt(selection.start);
   const comparisonText = morph(document.getText(selection));
   const comparison = naturalSort ? prepareNaturalSort(comparisonText) : [comparisonText];
   return {
-    selection,
     comparison,
-    line,
-    lineText: document.getText(line)
+    line: line.range,
+    lineText: line.text
   };
 }
 
-function lineFromSelection(this: void, document: vscode.TextDocument, selection: vscode.Selection) {
-  const pos = selection.start;
-  const lineStart = pos.with({ character: 0 });
-  const lineEnd = document.lineAt(pos).range.end;
-  return new vscode.Range(lineStart, lineEnd);
+function getLineData(
+  document: vscode.TextDocument,
+  lineno: number,
+  morph: IMorph,
+  naturalSort: boolean
+): ISelectionData {
+  const line = document.lineAt(lineno);
+  const comparisonText = morph(line.text);
+  const comparison = naturalSort ? prepareNaturalSort(comparisonText) : [comparisonText];
+  return {
+    comparison,
+    line: line.range,
+    lineText: line.text
+  };
 }
 
 const RE_NUMBER = /-?\d+(\.\d+)?/g;
@@ -71,7 +82,7 @@ function prepareNaturalSort(s: string): Chunk[] {
   return ret;
 }
 
-function sort(this: void, selections: ISelectionData[]) {
+function sort(selections: ISelectionData[]) {
   return selections
     .slice() // clone
     .sort((a, b) => {
@@ -81,7 +92,7 @@ function sort(this: void, selections: ISelectionData[]) {
     });
 }
 
-function unique(this: void, selections: ISelectionData[]) {
+function unique(selections: ISelectionData[]) {
   const unique: ISelectionData[] = [];
   let prev: vscode.Position | null = null;
   for (const selection of selections) {
@@ -93,14 +104,14 @@ function unique(this: void, selections: ISelectionData[]) {
   return unique;
 }
 
-function sortTexts(this: void, selections: ISelectionData[]) {
+function sortTexts(selections: ISelectionData[]) {
   return selections
     .slice() // clone
     .sort((a, b) => compare(a.comparison, b.comparison))
     .map((selection) => selection.lineText);
 }
 
-function compare(this: void, a: Chunk[], b: Chunk[]) {
+function compare(a: Chunk[], b: Chunk[]) {
   for (let i = 0; i < a.length && i < b.length; ++i) {
     // If different types, consider numbers less than character strings
     if (typeof a[i] !== typeof b[i]) return typeof a[i] == 'number' ? -1 : 1;
@@ -117,7 +128,6 @@ function compare(this: void, a: Chunk[], b: Chunk[]) {
 type IMorph = (s: string) => string;
 
 interface ISelectionData {
-  selection: vscode.Selection;
   comparison: Chunk[];
   line: vscode.Range;
   lineText: string;

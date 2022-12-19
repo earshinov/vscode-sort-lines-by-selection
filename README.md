@@ -6,6 +6,8 @@ This extension allows you to sort lines based on the text selected in each line.
 
 The functionality is available via the Command Palette: Ctrl+Shift+P > Sort Lines by Selection.
 
+When there is only one selected region, the extension will sort the entire lines that the selection spans, similarly to the built-in "Sort Lines Ascending" and "Sort Lines Descending" commands.
+
 ## Natural Sort <a name="natural-sort"></a>
 
 By default the extension compares selected strings lexicographically, which means that `10` will come before `9`. If you want numbers embedded in selected strings to be sorted as numbers, use Ctrl+Shift+P > Sort Lines by Selection (Natural Sort) command.

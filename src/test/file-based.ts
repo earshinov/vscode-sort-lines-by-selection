@@ -39,7 +39,7 @@ async function runFileBasedTest(
     const filepath = path.join(workspacePath, suiteName, `${basename}${extname}`);
     const doc = await vscode.workspace.openTextDocument(filepath);
     const editor = await vscode.window.showTextDocument(doc);
-    await selectDesignatedRanges(editor);
+    selectDesignatedRanges(editor);
     await f();
     actual = doc.getText();
   }
@@ -54,25 +54,42 @@ async function runFileBasedTest(
   assert.strictEqual(actual, expected);
 }
 
-const RE_BRACKETS = /\[.*?\]/g;
-
 /**
  * Select ranges designated with [...]
  */
-// eslint-disable-next-line @typescript-eslint/require-await
-async function selectDesignatedRanges(editor: vscode.TextEditor): Promise<void> {
-  const doc = editor.document;
-  let m: RegExpExecArray | null;
+function selectDesignatedRanges(editor: vscode.TextEditor): void {
   const selections: vscode.Selection[] = [];
 
-  for (let lineno = 0; lineno < doc.lineCount; ++lineno) {
-    const line = doc.lineAt(lineno);
-    while ((m = RE_BRACKETS.exec(line.text))) {
-      const start = m.index + 1;
-      const end = m.index + m[0].length - 1;
-      selections.push(new vscode.Selection(lineno, start, lineno, end));
-    }
+  const it = documentLines(editor.document)[Symbol.iterator]();
+  let line: vscode.TextLine | undefined;
+  let lastPosition: number = 0;
+  function next(): void {
+    const { value, done } = it.next();
+    line = (!done && value) || undefined;
+    lastPosition = 0;
+  }
+
+  next();
+
+  while (true) {
+    while (line && (lastPosition = line.text.indexOf('[', lastPosition)) < 0) next();
+    if (!line) break;
+
+    lastPosition += 1;
+    const startPosition = new vscode.Position(line.lineNumber, lastPosition);
+
+    while (line && (lastPosition = line.text.indexOf(']', lastPosition)) < 0) next();
+    if (!line) break;
+
+    const endPosition = new vscode.Position(line.lineNumber, lastPosition);
+    lastPosition += 1;
+
+    selections.push(new vscode.Selection(startPosition, endPosition));
   }
 
   editor.selections = selections;
+}
+
+function* documentLines(doc: vscode.TextDocument) {
+  for (let lineno = 0; lineno < doc.lineCount; ++lineno) yield doc.lineAt(lineno);
 }
